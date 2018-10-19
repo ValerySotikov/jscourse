@@ -13,11 +13,11 @@ var budgetController = (function() {
     this.value = value;
   };
 
-  function calcTotal(type) {
-    return data.totals[type].reduce((previousValue, currentValue) => {
+  function calculateTotal(type) {
+    data.totals[type] =  data.allItems[type].reduce((previousValue, currentValue) => {
       return previousValue + currentValue.value
     }, 0);
-  }
+  };
 
   var data = {
     allItems: {
@@ -27,7 +27,9 @@ var budgetController = (function() {
     totals: {
       expense: 0,
       income: 0
-    }
+    },
+    budget: 0,
+    percentage: -1
   };
 
   return {
@@ -58,21 +60,24 @@ var budgetController = (function() {
 
     calculateBudget: function() {
       //  calculate total income and expenses
-      var totalIncome, totalExpense, budget, percentage;
-
-      totalIncome = calcTotal('income');
-      totalExpense = calcTotal('expense');
-      budget = totalIncome - totalExpense;
-      percentage = Math.round( totalExpense / totalIncome * 100 );
-
-      return {
-        totalIncome: totalIncome,
-        totalExpense: totalExpense,
-        budget: budget,
-        percentage: percentage
-      };
+      calculateTotal('income');
+      calculateTotal('expense');
+      data.budget = data.totals.income - data.totals.expense;
+      // budget = totalIncome - totalExpense;
+      if (data.totals.income > 0) {
+        data.percentage = Math.round( data.totals.expense / data.totals.income * 100 );
+      }
       //  calculate the budget: income - expenses
       //  calculate the percentage of income that we spent
+    },
+
+    getBudget: function() {
+      return {
+        budget: data.budget,
+        totalIncome: data.totals.income,
+        totalExpences: data.totals.expense,
+        percentage: data.percentage
+      };
     },
 
     testing: function() {
@@ -145,7 +150,6 @@ var UIController = (function() {
     },
 
     displayChanges: function(budget) {
-      console.log(budget);
       document.querySelector('.budget__value').textContent = budget.budget;
       document.querySelector('.budget__income--value').textContent = '+' + budget.totalIncome;
       document.querySelector('.budget__expenses--value').textContent = budget.totalExpense;
@@ -175,7 +179,9 @@ var controller = (function(budgetCtrl, UICtrl) {
   var updateBudget = function() {
     //  1. Calculate the budget;
     //  1. Return the budget;
-    var budget = budgetCtrl.calculateBudget();
+    budgetCtrl.calculateBudget();
+    var budget = budgetCtrl.getBudget();
+    console.log(budget);
 
     //  6. Display the budget on the UI;
     UICtrl.displayChanges(budget);
