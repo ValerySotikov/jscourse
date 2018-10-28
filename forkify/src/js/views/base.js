@@ -1,9 +1,10 @@
 export const elements = {
-    searchInput: document.querySelector('.search__field'),
-    searchForm: document.querySelector('.search'),
-    searchResultList: document.querySelector('.results__list'),
-    searchResult: document.querySelector('.results'),
-    searchResultPages: document.querySelector('.results__pages')
+  searchInput: document.querySelector(".search__field"),
+  searchForm: document.querySelector(".search"),
+  searchResultList: document.querySelector(".results__list"),
+  searchResult: document.querySelector(".results"),
+  searchResultPages: document.querySelector(".results__pages"),
+  recipe: document.querySelector(".recipe")
 };
 
 export const renderLoader = parent => {
@@ -14,7 +15,7 @@ export const renderLoader = parent => {
       </svg>
     </div>
   `;
-  parent.insertAdjacentHTML('afterbegin', loader);
+  parent.insertAdjacentHTML("afterbegin", loader);
 };
 
 export const removeLoader = parent => {
