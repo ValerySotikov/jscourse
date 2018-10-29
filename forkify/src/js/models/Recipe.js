@@ -21,18 +21,18 @@ export default class Recipe {
     } catch (ex) {
       console.log(ex);
     }
-  }
+  };
 
   calcTime() {
     //  Assuming that we needs 15 min for all ingredients
     const numIng = this.ingredients.length;
     const periods = Math.ceil(numIng / 3);
     this.time = periods * 15;
-  }
+  };
 
   calcServings() {
     this.servings = 4;
-  }
+  };
 
   parseIngredients() {
     const unitsLong = [
@@ -109,5 +109,17 @@ export default class Recipe {
     });
 
     this.ingredients = newIngredients;
+  };
+
+  updateServings(type) {
+    //  Setrvings
+    const newServings = type === 'dec' ? this.servings - 1 : this.servings + 1;
+
+    //  Ingredients
+    this.ingredients.forEach(ing => {
+      ing.count *= ing.count * (newServings / this.servings);
+    });
+
+    this.servings = newServings;
   }
-}
+};
